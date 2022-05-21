@@ -10,7 +10,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
 
-def build_query(file: Iterator, cmd: str, value: Union[str, int]) -> Union[Iterator[str], List, Set]:
+def build_query(file: Union[Iterator[str], List, Set], cmd: str, value: Union[str, int]) -> Union[
+    Iterator[str], List, Set]:
     result: Union[Iterator[str], List, Set] = map(lambda log: log.strip(), file)
     if cmd == 'filter':
         result = filter(lambda log, text=value: text in log, result)
@@ -42,7 +43,7 @@ def build_query(file: Iterator, cmd: str, value: Union[str, int]) -> Union[Itera
 @app.route("/perform_query/", methods=['POST'])
 def perform_query() -> Union[Response, Tuple[str, int]]:
     try:
-        data: Dict[str, str] = request.get_json()
+        data: Dict[str, str] = request.get_json()  # type:ignore
     except KeyError:
         return 'Пустое поле запроса', 400
 
